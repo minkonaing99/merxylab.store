@@ -228,6 +228,7 @@ export default function DomeGallery({
     }
   };
 
+  const restartRAFRef = useRef(null);
   const lockedRadiusRef = useRef(null);
 
   useEffect(() => {
@@ -324,7 +325,11 @@ export default function DomeGallery({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        const wasVisible = isVisibleRef.current;
         isVisibleRef.current = entry.isIntersecting && entry.intersectionRatio > 0.25;
+        if (!wasVisible && isVisibleRef.current) {
+          restartRAFRef.current?.();
+        }
       },
       { threshold: [0, 0.25, 0.5] }
     );
@@ -343,8 +348,7 @@ export default function DomeGallery({
 
     const step = now => {
       if (!isVisibleRef.current) {
-        autoRotateRAF.current = requestAnimationFrame(step);
-        lastTime = now;
+        autoRotateRAF.current = null;
         return;
       }
 
@@ -356,6 +360,13 @@ export default function DomeGallery({
       applyTransform(0, nextY);
 
       autoRotateRAF.current = requestAnimationFrame(step);
+    };
+
+    restartRAFRef.current = () => {
+      if (!autoRotateRAF.current) {
+        lastTime = performance.now();
+        autoRotateRAF.current = requestAnimationFrame(step);
+      }
     };
 
     autoRotateRAF.current = requestAnimationFrame(step);

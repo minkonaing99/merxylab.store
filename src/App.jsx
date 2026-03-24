@@ -1,11 +1,11 @@
-import { Navbar } from './components/Navbar';
-import { HeroSection } from './components/HeroSection';
-import { CategoryStrip } from './components/CategoryStrip';
-import { ServicesSection } from './components/ServicesSection';
-import { ValueSection } from './components/ValueSection';
-import { ChannelsSection } from './components/ChannelsSection';
-import { BottomCtaSection } from './components/BottomCtaSection';
-import { Footer } from './components/Footer';
+import { Navbar } from './sections/Navbar';
+import { HeroSection } from './sections/HeroSection';
+import { CategoryStrip } from './sections/CategoryStrip';
+import { ServicesSection } from './sections/ServicesSection';
+import { ValueSection } from './sections/ValueSection';
+import { ChannelsSection } from './sections/ChannelsSection';
+import { BottomCtaSection } from './sections/BottomCtaSection';
+import { Footer } from './sections/Footer';
 import TargetCursor from './components/TargetCursor';
 
 export default function App() {

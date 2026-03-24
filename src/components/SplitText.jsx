@@ -11,6 +11,7 @@ export default function SplitText({
   to = { opacity: 1, y: 0 },
   textAlign = 'center',
   tag = 'span',
+  startDelay = 0,
   onLetterAnimationComplete,
 }) {
   const ref = useRef(null);
@@ -31,6 +32,7 @@ export default function SplitText({
         duration,
         ease,
         stagger: delay / 1000,
+        delay: startDelay,
         onComplete: () => {
           onLetterAnimationComplete?.();
         },
@@ -40,7 +42,7 @@ export default function SplitText({
     return () => {
       tween.kill();
     };
-  }, [delay, duration, ease, from, onLetterAnimationComplete, to, text]);
+  }, [delay, duration, ease, from, onLetterAnimationComplete, startDelay, to, text]);
 
   const Tag = tag;
 

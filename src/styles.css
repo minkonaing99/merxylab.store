@@ -581,6 +581,8 @@ button:hover {
 .channels-section,
 .bottom-cta {
   padding: 30px 0 18px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 
 .services-grid {
@@ -599,7 +601,6 @@ button:hover {
     border-color 320ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
   transform-origin: center;
-  will-change: box-shadow;
 }
 
 .service-card:hover {
@@ -752,18 +753,44 @@ button:hover {
 
 .value-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
 
 .value-card {
   position: relative;
   overflow: hidden;
-  padding: 26px;
+  padding: 28px;
   border-radius: 24px;
   animation: fade-up 720ms ease both;
   animation-delay: var(--delay, 0ms);
   width: 100%;
+}
+
+.value-card--featured {
+  grid-column: span 2;
+  padding: 32px;
+}
+
+.value-card--full {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 24px;
+  align-items: center;
+  padding: 28px 32px;
+}
+
+.value-card--full .value-card__orb {
+  display: none;
+}
+
+.value-card--full h3 {
+  grid-column: 1 / -1;
+}
+
+.value-card--full p {
+  grid-column: 1 / -1;
 }
 
 .value-card__orb {
@@ -776,22 +803,40 @@ button:hover {
   background: radial-gradient(circle, rgba(43, 118, 255, 0.24), transparent 70%);
 }
 
-.value-card h3 {
+.value-card--featured .value-card__orb {
+  width: 200px;
+  height: 200px;
+  top: -40px;
+  right: -30px;
+  background: radial-gradient(circle, rgba(43, 118, 255, 0.32), transparent 70%);
+}
+
+.value-card__stat {
   position: relative;
   margin: 0 0 12px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-family: 'Orbitron', sans-serif;
+  color: #5fd8ff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.value-card h3 {
+  position: relative;
+  margin: 0 0 10px;
   font-size: 1.08rem;
 }
 
-.value-card p {
+.value-card--featured h3 {
+  font-size: 1.22rem;
+}
+
+.value-card p:not(.value-card__stat) {
   position: relative;
   margin: 0;
   color: rgba(201, 212, 241, 0.66);
   line-height: 1.75;
-}
-
-.value-card__highlight {
-  color: #ffffff;
-  font-weight: 700;
 }
 
 .support-grid {
@@ -1104,9 +1149,16 @@ button:hover {
   }
 
   .services-grid,
-  .value-grid,
   .support-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .value-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .value-card--full {
+    grid-column: span 2;
   }
 
   .category-strip__track {
@@ -1230,7 +1282,11 @@ button:hover {
   }
 
   .value-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .value-card--full {
+    grid-column: span 2;
   }
 
   .support-grid {
@@ -1359,6 +1415,15 @@ button:hover {
   .footer__columns,
   .category-strip__track {
     grid-template-columns: 1fr;
+  }
+
+  .value-card--featured,
+  .value-card--full {
+    grid-column: span 1;
+  }
+
+  .value-card--full {
+    display: block;
   }
 
   .hero__preview-video {
