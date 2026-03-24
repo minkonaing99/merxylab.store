@@ -6,6 +6,7 @@ export function ReflectiveCard({
   title,
   copy,
   buttonLabel,
+  buttonHref = '#channels',
   handle,
   roleLabel = 'Telegram Channel',
   handleLabel = 'Telegram ID',
@@ -16,9 +17,11 @@ export function ReflectiveCard({
   const cardRef = useRef(null);
   const videoRef = useRef(null);
   const hasPlayedRef = useRef(false);
+  const prefersReducedMotion =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
-    if (!videoSrc || !cardRef.current || !videoRef.current) {
+    if (!videoSrc || !cardRef.current || !videoRef.current || prefersReducedMotion) {
       return undefined;
     }
 
@@ -38,14 +41,14 @@ export function ReflectiveCard({
     observer.observe(cardRef.current);
 
     return () => observer.disconnect();
-  }, [videoSrc]);
+  }, [prefersReducedMotion, videoSrc]);
 
   return (
     <article ref={cardRef} className={`reflective-card reflective-card--${accent}`} style={style}>
       <div className="reflective-card__base" />
       <div className="reflective-card__video">
         {videoSrc ? (
-          <video ref={videoRef} className="reflective-card__video-media" src={videoSrc} muted playsInline preload="metadata" />
+          <video ref={videoRef} className="reflective-card__video-media" src={videoSrc} muted playsInline preload="none" />
         ) : null}
       </div>
       <div className="reflective-card__noise" />
@@ -72,9 +75,9 @@ export function ReflectiveCard({
           </div>
         </div>
 
-        <button type="button" className="button button--primary reflective-card__button">
+        <a href={buttonHref} className="button button--primary reflective-card__button">
           {buttonLabel}
-        </button>
+        </a>
       </div>
     </article>
   );

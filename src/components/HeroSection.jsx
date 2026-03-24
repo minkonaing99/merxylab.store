@@ -35,7 +35,7 @@ function PreviewPanel() {
             fitBasis="max"
             minRadius={600}
             maxVerticalRotationDeg={0}
-            segments={34}
+            segments={20}
             dragDampening={2}
             grayscale={false}
             padFactor={0.05}
@@ -87,12 +87,12 @@ export function HeroSection() {
         </p>
 
         <div className="hero__actions">
-          <button type="button" className="button button--primary button--large">
+          <a href="#services" className="button button--primary button--large">
             Browse Services
-          </button>
-          <button type="button" className="button button--ghost button--large">
+          </a>
+          <a href="#channels" className="button button--ghost button--large">
             Talk to Admin
-          </button>
+          </a>
         </div>
 
         <HighlightCards />

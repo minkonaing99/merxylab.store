@@ -752,7 +752,7 @@ button:hover {
 
 .value-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 18px;
 }
 
@@ -763,6 +763,7 @@ button:hover {
   border-radius: 24px;
   animation: fade-up 720ms ease both;
   animation-delay: var(--delay, 0ms);
+  width: 100%;
 }
 
 .value-card__orb {
@@ -786,6 +787,11 @@ button:hover {
   margin: 0;
   color: rgba(201, 212, 241, 0.66);
   line-height: 1.75;
+}
+
+.value-card__highlight {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .support-grid {
@@ -1108,7 +1114,16 @@ button:hover {
   }
 
   .site-footer {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footer__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column: span 2;
+  }
+
+  .site-footer {
+    gap: 18px;
   }
 }
 
@@ -1214,7 +1229,10 @@ button:hover {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .value-grid,
+  .value-grid {
+    grid-template-columns: 1fr;
+  }
+
   .support-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

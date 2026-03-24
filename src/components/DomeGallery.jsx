@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useCallback } from 'react';
-import { useGesture } from '@use-gesture/react';
 import './DomeGallery.css';
 
 import adobeImg from '../../images/adobe.jpg';
@@ -185,10 +184,8 @@ export default function DomeGallery({
   padFactor = 0.25,
   overlayBlurColor = '#060010',
   maxVerticalRotationDeg = DEFAULTS.maxVerticalRotationDeg,
-  dragSensitivity = DEFAULTS.dragSensitivity,
   enlargeTransitionMs = DEFAULTS.enlargeTransitionMs,
   segments = 34,
-  dragDampening = 2,
   openedImageWidth = '250px',
   openedImageHeight = '350px',
   imageBorderRadius = '30px',
@@ -205,26 +202,20 @@ export default function DomeGallery({
   const originalTilePositionRef = useRef(null);
 
   const rotationRef = useRef({ x: 0, y: 0 });
-  const startRotRef = useRef({ x: 0, y: 0 });
-  const startPosRef = useRef(null);
-  const draggingRef = useRef(false);
-  const movedRef = useRef(false);
-  const inertiaRAF = useRef(null);
   const autoRotateRAF = useRef(null);
+  const isVisibleRef = useRef(false);
   const openingRef = useRef(false);
   const openStartedAtRef = useRef(0);
   const lastDragEndAt = useRef(0);
+  const prefersReducedMotion = useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    []
+  );
 
-  const scrollLockedRef = useRef(false);
   const lockScroll = useCallback(() => {
-    if (scrollLockedRef.current) return;
-    scrollLockedRef.current = true;
-    document.body.classList.add('dg-scroll-lock');
+    return;
   }, []);
   const unlockScroll = useCallback(() => {
-    if (!scrollLockedRef.current) return;
-    if (rootRef.current?.getAttribute('data-enlarging') === 'true') return;
-    scrollLockedRef.current = false;
     document.body.classList.remove('dg-scroll-lock');
   }, []);
 
@@ -326,54 +317,40 @@ export default function DomeGallery({
     applyTransform(rotationRef.current.x, rotationRef.current.y);
   }, []);
 
-  const stopInertia = useCallback(() => {
-    if (inertiaRAF.current) {
-      cancelAnimationFrame(inertiaRAF.current);
-      inertiaRAF.current = null;
+  useEffect(() => {
+    if (!rootRef.current || prefersReducedMotion) {
+      return undefined;
     }
-  }, []);
 
-  const startInertia = useCallback(
-    (vx, vy) => {
-      const MAX_V = 1.4;
-      let vX = clamp(vx, -MAX_V, MAX_V) * 80;
-      let vY = clamp(vy, -MAX_V, MAX_V) * 80;
-      let frames = 0;
-      const d = clamp(dragDampening ?? 0.6, 0, 1);
-      const frictionMul = 0.94 + 0.055 * d;
-      const stopThreshold = 0.015 - 0.01 * d;
-      const maxFrames = Math.round(90 + 270 * d);
-      const step = () => {
-        vX *= frictionMul;
-        vY *= frictionMul;
-        if (Math.abs(vX) < stopThreshold && Math.abs(vY) < stopThreshold) {
-          inertiaRAF.current = null;
-          return;
-        }
-        if (++frames > maxFrames) {
-          inertiaRAF.current = null;
-          return;
-        }
-        const nextX = clamp(rotationRef.current.x - vY / 200, -maxVerticalRotationDeg, maxVerticalRotationDeg);
-        const nextY = wrapAngleSigned(rotationRef.current.y + vX / 200);
-        rotationRef.current = { x: nextX, y: nextY };
-        applyTransform(nextX, nextY);
-        inertiaRAF.current = requestAnimationFrame(step);
-      };
-      stopInertia();
-      inertiaRAF.current = requestAnimationFrame(step);
-    },
-    [dragDampening, maxVerticalRotationDeg, stopInertia]
-  );
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting && entry.intersectionRatio > 0.25;
+      },
+      { threshold: [0, 0.25, 0.5] }
+    );
+
+    observer.observe(rootRef.current);
+
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return undefined;
+    }
+
     let lastTime = performance.now();
 
     const step = now => {
+      if (!isVisibleRef.current) {
+        autoRotateRAF.current = requestAnimationFrame(step);
+        lastTime = now;
+        return;
+      }
+
       const delta = now - lastTime;
       lastTime = now;
 
-      // Keep the hero dome rotating slowly and smoothly for the hero section.
       const nextY = wrapAngleSigned(rotationRef.current.y + delta * 0.0042);
       rotationRef.current = { x: 0, y: nextY };
       applyTransform(0, nextY);
@@ -388,57 +365,7 @@ export default function DomeGallery({
         cancelAnimationFrame(autoRotateRAF.current);
       }
     };
-  }, []);
-
-  useGesture(
-    {
-      onDragStart: ({ event }) => {
-        return;
-        if (focusedElRef.current) return;
-        stopInertia();
-        draggingRef.current = true;
-        movedRef.current = false;
-        startRotRef.current = { ...rotationRef.current };
-        startPosRef.current = { x: event.clientX, y: event.clientY };
-      },
-      onDrag: ({ event, last, velocity = [0, 0], direction = [0, 0], movement }) => {
-        return;
-        if (focusedElRef.current || !draggingRef.current || !startPosRef.current) return;
-        const dxTotal = event.clientX - startPosRef.current.x;
-        const dyTotal = event.clientY - startPosRef.current.y;
-        if (!movedRef.current) {
-          const dist2 = dxTotal * dxTotal + dyTotal * dyTotal;
-          if (dist2 > 16) movedRef.current = true;
-        }
-        const nextX = clamp(
-          startRotRef.current.x - dyTotal / dragSensitivity,
-          -maxVerticalRotationDeg,
-          maxVerticalRotationDeg
-        );
-        const nextY = wrapAngleSigned(startRotRef.current.y + dxTotal / dragSensitivity);
-        if (rotationRef.current.x !== nextX || rotationRef.current.y !== nextY) {
-          rotationRef.current = { x: nextX, y: nextY };
-          applyTransform(nextX, nextY);
-        }
-        if (last) {
-          draggingRef.current = false;
-          let [vMagX, vMagY] = velocity;
-          const [dirX, dirY] = direction;
-          let vx = vMagX * dirX;
-          let vy = vMagY * dirY;
-          if (Math.abs(vx) < 0.001 && Math.abs(vy) < 0.001 && Array.isArray(movement)) {
-            const [mx, my] = movement;
-            vx = clamp((mx / dragSensitivity) * 0.02, -1.2, 1.2);
-            vy = clamp((my / dragSensitivity) * 0.02, -1.2, 1.2);
-          }
-          if (Math.abs(vx) > 0.005 || Math.abs(vy) > 0.005) startInertia(vx, vy);
-          if (movedRef.current) lastDragEndAt.current = performance.now();
-          movedRef.current = false;
-        }
-      }
-    },
-    { target: mainRef, eventOptions: { passive: true } }
-  );
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     const scrim = scrimRef.current;
@@ -521,7 +448,7 @@ export default function DomeGallery({
                 el.style.transition = '';
                 el.style.opacity = '';
                 openingRef.current = false;
-                if (!draggingRef.current && rootRef.current?.getAttribute('data-enlarging') !== 'true') {
+                if (rootRef.current?.getAttribute('data-enlarging') !== 'true') {
                   document.body.classList.remove('dg-scroll-lock');
                 }
               }, 300);
@@ -657,7 +584,6 @@ export default function DomeGallery({
 
   const onTileClick = useCallback(
     e => {
-      if (draggingRef.current || movedRef.current) return;
       if (performance.now() - lastDragEndAt.current < 80) return;
       if (openingRef.current) return;
       openItemFromElement(e.currentTarget);
@@ -668,7 +594,6 @@ export default function DomeGallery({
   const onTilePointerUp = useCallback(
     e => {
       if (e.pointerType !== 'touch') return;
-      if (draggingRef.current || movedRef.current) return;
       if (performance.now() - lastDragEndAt.current < 80) return;
       if (openingRef.current) return;
       openItemFromElement(e.currentTarget);
@@ -676,12 +601,15 @@ export default function DomeGallery({
     [openItemFromElement]
   );
 
-  useEffect(() => () => {
-    if (autoRotateRAF.current) {
-      cancelAnimationFrame(autoRotateRAF.current);
-    }
-    document.body.classList.remove('dg-scroll-lock');
-  }, []);
+  useEffect(
+    () => () => {
+      if (autoRotateRAF.current) {
+        cancelAnimationFrame(autoRotateRAF.current);
+      }
+      document.body.classList.remove('dg-scroll-lock');
+    },
+    []
+  );
 
   return (
     <div

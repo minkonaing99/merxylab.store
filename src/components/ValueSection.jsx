@@ -1,18 +1,3 @@
-const values = [
-  {
-    title: 'Best Price Positioning',
-    description: 'Lead with value clearly so every service card feels like a good deal, not a random listing.',
-  },
-  {
-    title: 'Support You Can Reach Fast',
-    description: 'Make admin and messenger access obvious, because trust is a key part of this business model.',
-  },
-  {
-    title: 'Delivery That Feels Reliable',
-    description: 'Use instant-delivery messaging, order steps, and clean product detail blocks to reduce hesitation.',
-  },
-];
-
 export function ValueSection() {
   return (
     <section className="value-section" id="why-buy">
@@ -24,13 +9,20 @@ export function ValueSection() {
       </header>
 
       <div className="value-grid">
-        {values.map((value, index) => (
-          <article key={value.title} className="value-card" style={{ '--delay': `${index * 140}ms` }}>
-            <span className="value-card__orb" />
-            <h3>{value.title}</h3>
-            <p>{value.description}</p>
-          </article>
-        ))}
+        <article className="value-card" style={{ '--delay': '0ms' }}>
+          <span className="value-card__orb" />
+          <h3>Why customers trust MerxyLab</h3>
+          <p>
+            We keep <strong className="value-card__highlight">pricing clear</strong>,{' '}
+            <strong className="value-card__highlight">support easy to reach</strong>, and{' '}
+            <strong className="value-card__highlight">delivery structured</strong> so every
+            service feels reliable instead of random. Customers can{' '}
+            <strong className="value-card__highlight">check plans quickly</strong>,{' '}
+            <strong className="value-card__highlight">compare durations</strong>, and{' '}
+            <strong className="value-card__highlight">contact the right channel</strong>{' '}
+            without confusion.
+          </p>
+        </article>
       </div>
     </section>
   );

@@ -42,7 +42,7 @@ export function Footer() {
         <span className="footer__brand-mark" aria-hidden="true" />
         <div>
           <strong>MerxyLab</strong>
-          <p>Premium digital subscriptions with cleaner offers, faster contact, and direct channel access.</p>
+          <p>Premium digital subscriptions.</p>
           <a href="#top">Back to top</a>
         </div>
       </div>

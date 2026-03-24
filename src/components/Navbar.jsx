@@ -19,7 +19,7 @@ function NavLinks({ onNavigate }) {
   return (
     <ul className="navbar__links" aria-label="Primary">
       {navItems.map((item) => (
-      <li key={item}>
+        <li key={item.label}>
           <a
             href={item.href}
             onClick={(event) => {
@@ -67,7 +67,7 @@ export function Navbar() {
             </nav>
 
             <div className="navbar__actions">
-              <a href="#support" className="navbar__secondary-link">
+              <a href="#channels" className="navbar__secondary-link">
                 Contact Admin
               </a>
               <a href="#services" className="button button--primary navbar__cta">

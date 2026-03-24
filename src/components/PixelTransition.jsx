@@ -11,14 +11,19 @@ export default function PixelTransition({
   once = false,
   aspectRatio = '100%',
   className = '',
-  style = {}
+  style = {},
+  disabled = false
 }) {
   const pixelGridRef = useRef(null);
   const activeRef = useRef(null);
   const delayedCallRef = useRef(null);
   const enterTimerRef = useRef(null);
   const leaveTimerRef = useRef(null);
+  const containerRef = useRef(null);
+  const isVisibleRef = useRef(true);
   const [isActive, setIsActive] = useState(false);
+  const prefersReducedMotion =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const isTouchDevice =
     typeof window !== 'undefined' &&
@@ -27,6 +32,8 @@ export default function PixelTransition({
       window.matchMedia('(pointer: coarse)').matches);
 
   useEffect(() => {
+    if (disabled || prefersReducedMotion) return undefined;
+
     const pixelGridEl = pixelGridRef.current;
     if (!pixelGridEl) return;
 
@@ -46,9 +53,26 @@ export default function PixelTransition({
         pixelGridEl.appendChild(pixel);
       }
     }
-  }, [gridSize, pixelColor]);
+  }, [disabled, gridSize, pixelColor, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (disabled || prefersReducedMotion || !containerRef.current) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [disabled, prefersReducedMotion]);
 
   const animatePixels = (activate) => {
+    if (disabled || prefersReducedMotion || !isVisibleRef.current) return;
     setIsActive(activate);
 
     const pixelGridEl = pixelGridRef.current;
@@ -104,6 +128,7 @@ export default function PixelTransition({
   }, []);
 
   const handleEnter = () => {
+    if (disabled || prefersReducedMotion || !isVisibleRef.current) return;
     if (leaveTimerRef.current) {
       clearTimeout(leaveTimerRef.current);
       leaveTimerRef.current = null;
@@ -116,6 +141,7 @@ export default function PixelTransition({
   };
 
   const handleLeave = () => {
+    if (disabled || prefersReducedMotion) return;
     if (enterTimerRef.current) {
       clearTimeout(enterTimerRef.current);
       enterTimerRef.current = null;
@@ -134,23 +160,24 @@ export default function PixelTransition({
 
   return (
     <div
+      ref={containerRef}
       className={`pixelated-image-card ${className}`.trim()}
       style={style}
-      onMouseEnter={!isTouchDevice ? handleEnter : undefined}
-      onMouseLeave={!isTouchDevice ? handleLeave : undefined}
-      onClick={isTouchDevice ? handleClick : undefined}
-      onFocus={!isTouchDevice ? handleEnter : undefined}
-      onBlur={!isTouchDevice ? handleLeave : undefined}
-      tabIndex={0}
+      onMouseEnter={!disabled && !isTouchDevice ? handleEnter : undefined}
+      onMouseLeave={!disabled && !isTouchDevice ? handleLeave : undefined}
+      onClick={!disabled && isTouchDevice ? handleClick : undefined}
+      onFocus={!disabled && !isTouchDevice ? handleEnter : undefined}
+      onBlur={!disabled && !isTouchDevice ? handleLeave : undefined}
+      tabIndex={disabled ? -1 : 0}
     >
       <div style={{ paddingTop: aspectRatio }} />
       <div className="pixelated-image-card__default" aria-hidden={isActive}>
         {firstContent}
       </div>
-      <div className="pixelated-image-card__active" ref={activeRef} aria-hidden={!isActive}>
+      <div className="pixelated-image-card__active" ref={activeRef} aria-hidden={!isActive || disabled}>
         {secondContent}
       </div>
-      <div className="pixelated-image-card__pixels" ref={pixelGridRef} />
+      {!disabled && <div className="pixelated-image-card__pixels" ref={pixelGridRef} />}
     </div>
   );
 }
