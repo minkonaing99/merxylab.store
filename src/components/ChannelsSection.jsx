@@ -1,6 +1,8 @@
 import { ReflectiveCard } from './ReflectiveCard';
 import mainChannelVideo from '../../moving_card/animatedman.mp4';
 import supportChannelVideo from '../../moving_card/animatefemale.mp4';
+import messengerChannelVideo from '../../moving_card/smokeman.mp4';
+import supportAltChannelVideo from '../../moving_card/tonato.mp4';
 
 const channels = [
   {
@@ -34,7 +36,7 @@ const channels = [
     handle: 'Messenger Link',
     roleLabel: 'Main Messenger',
     handleLabel: 'Messenger ID',
-    videoSrc: mainChannelVideo,
+    videoSrc: messengerChannelVideo,
     accent: 'blue',
   },
   {
@@ -46,7 +48,7 @@ const channels = [
     handle: '@merxylabsupport',
     roleLabel: 'Support Channel',
     handleLabel: 'Telegram ID',
-    videoSrc: supportChannelVideo,
+    videoSrc: supportAltChannelVideo,
     accent: 'cyan',
   },
 ];
