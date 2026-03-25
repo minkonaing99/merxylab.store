@@ -36,7 +36,6 @@ function PreviewPanel() {
             minRadius={600}
             maxVerticalRotationDeg={0}
             segments={20}
-            dragDampening={2}
             grayscale={false}
             padFactor={0.05}
             openedImageWidth="320px"

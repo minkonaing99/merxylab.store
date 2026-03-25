@@ -107,7 +107,6 @@ const DEFAULT_IMAGES = [
 
 const DEFAULTS = {
   maxVerticalRotationDeg: 5,
-  dragSensitivity: 20,
   enlargeTransitionMs: 300,
   segments: 35
 };
@@ -212,9 +211,6 @@ export default function DomeGallery({
     []
   );
 
-  const lockScroll = useCallback(() => {
-    return;
-  }, []);
   const unlockScroll = useCallback(() => {
     document.body.classList.remove('dg-scroll-lock');
   }, []);
@@ -485,7 +481,6 @@ export default function DomeGallery({
       if (openingRef.current) return;
       openingRef.current = true;
       openStartedAtRef.current = performance.now();
-      lockScroll();
       const parent = el.parentElement;
       focusedElRef.current = el;
       el.setAttribute('data-focused', 'true');
@@ -590,7 +585,7 @@ export default function DomeGallery({
         overlay.addEventListener('transitionend', onFirstEnd);
       }
     },
-    [enlargeTransitionMs, lockScroll, openedImageHeight, openedImageWidth, segments, unlockScroll]
+    [enlargeTransitionMs, openedImageHeight, openedImageWidth, segments, unlockScroll]
   );
 
   const onTileClick = useCallback(

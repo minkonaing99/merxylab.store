@@ -4,7 +4,6 @@ import './ReflectiveCard.css';
 export function ReflectiveCard({
   eyebrow,
   title,
-  copy,
   buttonLabel,
   buttonHref = '#channels',
   handle,
