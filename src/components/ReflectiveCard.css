@@ -45,6 +45,7 @@
     linear-gradient(180deg, rgba(22, 26, 40, 0.9), rgba(10, 13, 22, 0.98));
   filter: blur(5px) saturate(125%);
   transform: scale(1.08);
+  border-radius: 28px;
 }
 
 .reflective-card__video {
