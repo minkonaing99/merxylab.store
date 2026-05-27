@@ -4,9 +4,8 @@ import './ReflectiveCard.css';
 export function ReflectiveCard({
   eyebrow,
   title,
-  buttonLabel,
-  buttonHref = '#channels',
   handle,
+  handleHref,
   roleLabel = 'Telegram Channel',
   handleLabel = 'Telegram ID',
   videoSrc,
@@ -69,14 +68,16 @@ export function ReflectiveCard({
           <div className="reflective-card__footer-card">
             <div className="reflective-card__meta">
               <span className="reflective-card__label">{handleLabel}</span>
-              <strong>{handle}</strong>
+              {handleHref ? (
+                <a href={handleHref} target="_blank" rel="noopener noreferrer" className="reflective-card__handle-link">
+                  {handle}
+                </a>
+              ) : (
+                <strong>{handle}</strong>
+              )}
             </div>
           </div>
         </div>
-
-        <a href={buttonHref} className="button button--primary reflective-card__button">
-          {buttonLabel}
-        </a>
       </div>
     </article>
   );
