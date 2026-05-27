@@ -1,3 +1,8 @@
+import mainChannelVideo from '../../moving_card/animatedman.mp4';
+import supportChannelVideo from '../../moving_card/animatefemale.mp4';
+import messengerChannelVideo from '../../moving_card/smokeman.mp4';
+import supportAltChannelVideo from '../../moving_card/tonato.mp4';
+
 export const channels = [
   {
     eyebrow: 'Main Telegram',
@@ -6,7 +11,7 @@ export const channels = [
     buttonLabel: 'Add Main Link',
     buttonHref: 'https://t.me/merxylabstore',
     handle: '@merxylabstore',
-    videoSrc: null,
+    videoSrc: mainChannelVideo,
     accent: 'blue',
   },
   {
@@ -18,7 +23,7 @@ export const channels = [
     handle: 'Facebook Link',
     roleLabel: 'Main Facebook',
     handleLabel: 'Facebook ID',
-    videoSrc: null,
+    videoSrc: supportChannelVideo,
     accent: 'cyan',
   },
   {
@@ -30,7 +35,7 @@ export const channels = [
     handle: 'Messenger Link',
     roleLabel: 'Main Messenger',
     handleLabel: 'Messenger ID',
-    videoSrc: null,
+    videoSrc: messengerChannelVideo,
     accent: 'blue',
   },
   {
@@ -42,7 +47,7 @@ export const channels = [
     handle: '@merxylabsupport',
     roleLabel: 'Support Channel',
     handleLabel: 'Telegram ID',
-    videoSrc: null,
+    videoSrc: supportAltChannelVideo,
     accent: 'cyan',
   },
 ];
