@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import { navItems } from '../data/navigation';
-
-function BrandMark() {
-  return (
-    <span className="brand-mark" aria-hidden="true">
-      <span className="brand-mark__core" />
-      <span className="brand-mark__spark brand-mark__spark--one" />
-      <span className="brand-mark__spark brand-mark__spark--two" />
-    </span>
-  );
-}
+import logo from '../../images/merxylab_logo.png';
 
 function NavLinks({ onNavigate }) {
   return (
@@ -37,7 +28,7 @@ export function Navbar() {
     <header className={`navbar ${isMenuOpen ? 'navbar--menu-open' : ''}`}>
       <div className="navbar__shell">
         <a href="#top" className="navbar__brand">
-          <BrandMark />
+          <img src={logo} alt="MerxyLab logo" className="navbar__logo" width="36" height="36" />
           <span className="navbar__brand-text">
             <span className="navbar__brand-main">MerxyLab</span>
             <span className="navbar__brand-sub">Premium digital subscriptions</span>

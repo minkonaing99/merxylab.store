@@ -1,4 +1,5 @@
 import { footerColumns } from '../data/navigation';
+import logo from '../../images/merxylab_logo.png';
 
 function FooterColumn({ title, links }) {
   return (
@@ -21,7 +22,7 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer__brand">
-        <span className="footer__brand-mark" aria-hidden="true" />
+        <img src={logo} alt="MerxyLab logo" className="footer__brand-mark" width="38" height="38" />
         <div>
           <strong>MerxyLab</strong>
           <p>Premium digital subscriptions.</p>

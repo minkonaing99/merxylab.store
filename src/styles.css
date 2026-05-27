@@ -197,25 +197,11 @@ button:hover {
   gap: 14px;
 }
 
-.brand-mark {
-  position: relative;
-  width: 42px;
-  height: 42px;
-}
-
-.brand-mark__core,
-.brand-mark__spark {
-  position: absolute;
-}
-
-.brand-mark__core {
-  inset: 6px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 30%, #ffffff 0%, #bde9ff 28%, #47a8ff 58%, #2151ff 100%);
-  box-shadow:
-    0 0 0 1px rgba(137, 197, 255, 0.16),
-    0 18px 36px rgba(33, 81, 255, 0.28);
+.navbar__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .navbar__brand-text {
@@ -237,25 +223,6 @@ button:hover {
   line-height: 1.1;
 }
 
-.brand-mark__spark {
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(155, 226, 255, 0.92), rgba(89, 169, 255, 0));
-  filter: drop-shadow(0 0 8px rgba(126, 213, 255, 0.42));
-}
-
-.brand-mark__spark--one {
-  top: 0;
-  left: 24px;
-  width: 6px;
-  height: 14px;
-}
-
-.brand-mark__spark--two {
-  top: 10px;
-  left: 0;
-  width: 14px;
-  height: 6px;
-}
 
 .navbar__nav {
   justify-self: start;
@@ -1024,9 +991,8 @@ button:hover {
   flex: none;
   width: 38px;
   height: 38px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ffffff, #8de0ff);
-  box-shadow: 0 16px 28px rgba(56, 124, 255, 0.18);
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .footer__brand strong {
