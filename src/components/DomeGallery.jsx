@@ -1,26 +1,26 @@
 import { useEffect, useMemo, useRef, useCallback } from 'react';
 import './DomeGallery.css';
 
-import adobeImg from '../../images/adobe.jpg';
-import appleMusicImg from '../../images/apple-music.png';
-import canvaImg from '../../images/canva.jpg';
-import capcutImg from '../../images/capcut.jpg';
-import chatgptImg from '../../images/chatgpt.jpg';
-import discordImg from '../../images/discord.jpg';
-import disneyImg from '../../images/disney.jpg';
-import duolingoImg from '../../images/duolingo.jpg';
-import expressImg from '../../images/express.jpg';
-import geminiImg from '../../images/gemini.jpg';
-import grammarlyImg from '../../images/grammarly.jpg';
-import hboImg from '../../images/hbo.jpg';
-import huluImg from '../../images/hulu.jpg';
-import microsoft365Img from '../../images/microsoft365.jpg';
-import netflixImg from '../../images/netflix.jpg';
-import perplexityImg from '../../images/perplexity.jpg';
-import primeImg from '../../images/prime.jpg';
-import spotifyImg from '../../images/spotify.jpg';
-import telegramPremiumImg from '../../images/telegram-premium.jpg';
-import youtubeImg from '../../images/youtube.jpg';
+import adobeImg from '../../images/adobe.webp';
+import appleMusicImg from '../../images/apple-music.webp';
+import canvaImg from '../../images/canva.webp';
+import capcutImg from '../../images/capcut.webp';
+import chatgptImg from '../../images/chatgpt.webp';
+import discordImg from '../../images/discord.webp';
+import disneyImg from '../../images/disney.webp';
+import duolingoImg from '../../images/duolingo.webp';
+import expressImg from '../../images/express.webp';
+import geminiImg from '../../images/gemini.webp';
+import grammarlyImg from '../../images/grammarly.webp';
+import hboImg from '../../images/hbo.webp';
+import huluImg from '../../images/hulu.webp';
+import microsoft365Img from '../../images/microsoft365.webp';
+import netflixImg from '../../images/netflix.webp';
+import perplexityImg from '../../images/perplexity.webp';
+import primeImg from '../../images/prime.webp';
+import spotifyImg from '../../images/spotify.webp';
+import telegramPremiumImg from '../../images/telegram-premium.webp';
+import youtubeImg from '../../images/youtube.webp';
 
 const DEFAULT_IMAGES = [
   {
