@@ -14,7 +14,6 @@ export function ReflectiveCard({
 }) {
   const cardRef = useRef(null);
   const videoRef = useRef(null);
-  const hasPlayedRef = useRef(false);
   const prefersReducedMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -25,15 +24,13 @@ export function ReflectiveCard({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting || entry.intersectionRatio < 1 || hasPlayedRef.current) {
-          return;
+        if (entry.isIntersecting) {
+          videoRef.current.play().catch(() => {});
+        } else {
+          videoRef.current.pause();
         }
-
-        hasPlayedRef.current = true;
-        videoRef.current.play().catch(() => {});
-        observer.disconnect();
       },
-      { threshold: 1 }
+      { threshold: 0.5 }
     );
 
     observer.observe(cardRef.current);
@@ -46,7 +43,7 @@ export function ReflectiveCard({
       <div className="reflective-card__base" />
       <div className="reflective-card__video">
         {videoSrc ? (
-          <video ref={videoRef} className="reflective-card__video-media" src={videoSrc} muted playsInline preload="none" />
+          <video ref={videoRef} className="reflective-card__video-media" src={videoSrc} muted playsInline preload="none" loop />
         ) : null}
       </div>
       <div className="reflective-card__noise" />

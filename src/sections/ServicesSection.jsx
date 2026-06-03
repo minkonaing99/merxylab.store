@@ -1,5 +1,11 @@
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import PixelTransition from '../components/PixelTransition';
 import { imageMap, toneMap, productsData } from '../data/products';
+import { categoryBadgeMap } from '../data/categories';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function formatPlanLabel(label) {
   if (label.includes('(')) {
@@ -73,7 +79,7 @@ function ServiceCard({ service, index }) {
 
         <div className="service-card__plans">
           {service.plans.map((plan) => (
-            <div key={plan.label} className="service-card__plan cursor-target">
+            <div key={plan.label} className="service-card__plan">
               <span>{plan.label}</span>
               <strong>{plan.price}</strong>
             </div>
@@ -85,7 +91,42 @@ function ServiceCard({ service, index }) {
   );
 }
 
-export function ServicesSection() {
+export function ServicesSection({ activeCategory }) {
+  const gridRef = useRef(null);
+  const allowedBadges = activeCategory ? categoryBadgeMap[activeCategory] : null;
+  const visibleServices = allowedBadges
+    ? services.filter((s) => allowedBadges.includes(s.badges?.[0]))
+    : services;
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll('.service-card');
+    if (!cards.length) return;
+
+    gsap.killTweensOf(cards);
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 28, scale: 0.96 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.55,
+        ease: 'power3.out',
+        stagger: 0.055,
+        scrollTrigger: {
+          trigger: grid,
+          start: 'top 88%',
+          once: true,
+        },
+      }
+    );
+
+    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+  }, [activeCategory]);
+
   return (
     <section className="services-section" id="services">
       <header className="section-heading section-heading--split">
@@ -95,8 +136,8 @@ export function ServicesSection() {
         </div>
       </header>
 
-      <div className="services-grid">
-        {services.map((service, index) => (
+      <div className="services-grid" ref={gridRef}>
+        {visibleServices.map((service, index) => (
           <ServiceCard key={service.name} service={service} index={index} />
         ))}
       </div>

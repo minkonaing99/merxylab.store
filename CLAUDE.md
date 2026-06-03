@@ -1,4 +1,6 @@
-# MerxyLab Store — Claude Code Guide
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project overview
 
@@ -7,8 +9,9 @@ React + Vite dark-theme landing page for selling premium digital subscriptions. 
 ## Tech stack
 
 - React 18, Vite 5
-- GSAP 3 — animations (scroll triggers, timelines)
-- `@use-gesture/react` — pointer/drag gestures
+- GSAP 3 - animations (scroll triggers, timelines)
+
+No test framework. No linting config. No TypeScript.
 
 ## Dev commands
 
@@ -61,12 +64,30 @@ moving_card/      # MP4 videos used as channel card backgrounds (heaviest assets
 | Global CSS variables / tokens | `src/styles.css` |
 | Page section order | `src/App.jsx` |
 
+## Data flow
+
+`productsData` in `products.js` is `[{ popular: [...], other: [...] }]` - a single-element array with two sub-arrays. `ServicesSection` flattens both at module scope (not inside the component) via `productsData.flatMap(g => [...g.popular, ...g.other])`.
+
+`normalizePlans` in `ServicesSection` handles products with empty or array `price` fields by returning `[{ label: 'Contact', price: 'DM for price' }]`.
+
+## Section anchor IDs
+
+Scroll nav targets: `#top` (page root), `#services` (ServicesSection), `#channels` (ChannelsSection). Hero CTA buttons link to these. Do not remove or rename them.
+
+## Asset import patterns
+
+Two patterns are in use - do not mix them:
+- `DomeGallery`: static ESM `import imgName from '../../images/foo.jpg'` - Vite resolves and hashes at build time.
+- `imageMap` in `products.js`: `new URL('../../images/foo.jpg', import.meta.url).href` - dynamic but still build-time resolved by Vite.
+- `channels.js`: static ESM `import videoName from '../../moving_card/foo.mp4'` - Vite handles MP4 natively, no plugin needed.
+
 ## Key decisions & notes
 
 - All prices use `Ks` prefix (not MMK).
-- `productImages/` folder was deleted — product cards now source images from `images/` alongside the dome gallery. Fallback mappings: `zoompro` → `microsoft365.jpg`, `geminipro` → `gemini.jpg`, `vpn` → `express.jpg`.
+- `productImages/` folder was deleted - product cards now source images from `images/` alongside the dome gallery. Fallback mappings: `zoompro` → `microsoft365.jpg`, `geminipro` → `gemini.jpg`, `vpn` → `express.jpg`.
 - `SplitText` accepts a `startDelay` prop (seconds, default `0`). The hero "Overpaying" text uses `startDelay={2}`.
-- `DomeGallery` RAF loop fully stops when the dome is scrolled off-screen and resumes via IntersectionObserver — do not remove `restartRAFRef`.
+- `DomeGallery` RAF loop fully stops when the dome is scrolled off-screen and resumes via IntersectionObserver - do not remove `restartRAFRef`.
+- `ReflectiveCard` video plays once on first full intersection (`threshold: 1`), then the observer disconnects. Video is `preload="none"` and only plays if `videoSrc` is provided and `prefers-reduced-motion` is not set.
 - `content-visibility: auto` is applied to all below-fold sections for rendering performance. Do not add it to the hero/navbar.
-- `will-change` is intentionally absent from service cards — it was removed to eliminate ~25 unnecessary GPU compositor layers.
+- `will-change` is intentionally absent from service cards - it was removed to eliminate ~25 unnecessary GPU compositor layers.
 - Product card images use `loading="lazy"`.

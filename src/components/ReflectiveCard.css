@@ -256,3 +256,62 @@
     align-items: center;
   }
 }
+
+@media (max-width: 480px) {
+  .reflective-card {
+    aspect-ratio: 3 / 4;
+    border-radius: 20px;
+  }
+
+  .reflective-card__content {
+    padding: 13px;
+  }
+
+  .reflective-card__header {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reflective-card__eyebrow,
+  .reflective-card__status {
+    font-size: 0.58rem;
+    padding: 4px 7px;
+    letter-spacing: 0.05em;
+  }
+
+  .reflective-card__body {
+    padding-top: 12px;
+    gap: 10px;
+  }
+
+  .reflective-card__identity {
+    gap: 5px;
+  }
+
+  .reflective-card h3 {
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    line-height: 1.25;
+  }
+
+  .reflective-card__role {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .reflective-card__footer-card {
+    padding-top: 10px;
+    gap: 8px;
+  }
+
+  .reflective-card__label {
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+  }
+
+  .reflective-card__handle-link,
+  .reflective-card__meta strong {
+    font-size: 0.78rem;
+  }
+}

@@ -8,6 +8,7 @@ export default function StarBorder({
   color = '#59d7ff',
   speed = '5s',
   thickness = 1,
+  isSelected = false,
   children,
   style,
   onMouseEnter,
@@ -70,7 +71,7 @@ export default function StarBorder({
 
   return (
     <Component
-      className={`star-border-container ${isAnimating ? 'star-border-container--active' : ''} ${className}`.trim()}
+      className={`star-border-container ${(isAnimating || isSelected) ? 'star-border-container--active' : ''} ${className}`.trim()}
       style={{
         padding: `${thickness}px`,
         ...(style || {}),

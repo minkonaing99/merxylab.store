@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import DomeGallery from '../components/DomeGallery';
 import SplitText from '../components/SplitText';
 
@@ -21,6 +22,17 @@ function HighlightCards() {
 }
 
 function PreviewPanel() {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 720px)').matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 720px)');
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   return (
     <div className="hero__preview">
       <div className="hero__preview-main">
@@ -31,15 +43,15 @@ function PreviewPanel() {
         </div>
         <div className="hero__preview-video">
           <DomeGallery
-            fit={1.06}
+            fit={isMobile ? 0.9 : 1.06}
             fitBasis="max"
-            minRadius={600}
+            minRadius={isMobile ? 300 : 600}
             maxVerticalRotationDeg={0}
             segments={20}
             grayscale={false}
             padFactor={0.05}
-            openedImageWidth="320px"
-            openedImageHeight="320px"
+            openedImageWidth={isMobile ? "220px" : "320px"}
+            openedImageHeight={isMobile ? "220px" : "320px"}
           />
         </div>
       </div>
@@ -61,13 +73,12 @@ export function HeroSection() {
   return (
     <section className="hero">
       <div className="hero__content">
-        <span className="section-kicker">Premium Digital Store</span>
         <h1 className="hero__title">
           Buy Premium
           <br />
           Digital Services
           <br />
-          Without{' '}
+          <span className="hero__title-dim">Without </span>
           <SplitText
             text="Overpaying"
             className="hero__title-accent"
